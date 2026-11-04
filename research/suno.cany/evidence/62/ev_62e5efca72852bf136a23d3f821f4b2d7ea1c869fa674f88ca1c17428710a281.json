@@ -1,0 +1,51 @@
+{
+  "id": "ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281",
+  "subject": {
+    "kind": "unknown",
+    "sha256": "fc1a6b13235d10f83359a02d8117345dfac2eaa1e136cc98d2a2da7e9618bfe0",
+    "name": "05-open-models.md"
+  },
+  "operation": "core_target_triage",
+  "params": {
+    "path": "/home/user/MusicMake/research/sources/05-open-models.md"
+  },
+  "result": {
+    "description": "A file we don't recognise yet",
+    "kind": "unknown",
+    "next_steps": [
+      {
+        "tool": "native_bytes_show",
+        "why": "look at the raw bytes"
+      },
+      {
+        "tool": "core_target_open",
+        "why": "reopen with format=raw-binary if it is machine code"
+      }
+    ],
+    "plain_english": "05-open-models.md isn't a format we recognise yet.",
+    "recommended_toolsets": [
+      "core"
+    ],
+    "size": 834
+  },
+  "summary": "05-open-models.md isn't a format we recognise yet.",
+  "confidence": "inferred",
+  "authority": "original-files",
+  "environment": {
+    "clean_room": false,
+    "engine": "builtin",
+    "engine_version": "0.4.0",
+    "host": "linux-x86_64"
+  },
+  "limitations": [
+    {
+      "code": "detected_by_content",
+      "message": "the kind is detected from the first bytes and, to break ties, the file name"
+    }
+  ],
+  "coverage": {
+    "status": "unknown"
+  },
+  "locations": [],
+  "links": []
+}

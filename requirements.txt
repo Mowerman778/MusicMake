@@ -1,0 +1,8 @@
+fastapi>=0.110
+uvicorn>=0.29
+numpy>=1.26
+httpx>=0.27
+python-multipart>=0.0.9
+# optional
+anthropic>=2.0       # lyric helper with Claude
+# demucs             # stem splitting for songs not made by the Sketch engine

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MusicMake</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f2a541'/%3E%3Cpath d='M9 22V10l14-3v12' stroke='%231b1714' stroke-width='3' fill='none'/%3E%3Ccircle cx='9' cy='22' r='3' fill='%231b1714'/%3E%3Ccircle cx='23' cy='19' r='3' fill='%231b1714'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo" aria-hidden="true">♪</span> MusicMake</div>
+    <div class="engine">
+      <label for="engine">Engine</label>
+      <select id="engine"></select>
+      <span id="engine-note" class="muted small"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ============================================================ CREATE -->
+    <section class="panel create" aria-labelledby="create-h">
+      <h2 id="create-h">Make a song</h2>
+      <div class="tabs" role="tablist">
+        <button role="tab" class="tab active" data-tab="quick" aria-selected="true">Quick</button>
+        <button role="tab" class="tab" data-tab="detailed" aria-selected="false">Detailed</button>
+      </div>
+
+      <form id="create-form" autocomplete="off">
+        <div class="tabpane" data-pane="quick">
+          <label for="prompt">Describe it</label>
+          <textarea id="prompt" rows="4" placeholder="A warm acoustic song about the first morning of spring"></textarea>
+        </div>
+
+        <div class="tabpane hidden" data-pane="detailed">
+          <label for="title">Title <span class="muted">(optional)</span></label>
+          <input id="title" type="text" maxlength="80">
+
+          <div class="row between">
+            <label for="lyrics">Lyrics</label>
+            <button type="button" class="link" id="lyrics-help-btn">✎ Help me write</button>
+          </div>
+          <div id="lyrics-help" class="subcard hidden">
+            <input id="lh-topic" type="text" placeholder="What's it about?">
+            <div class="row">
+              <input id="lh-mood" type="text" placeholder="Mood (optional)">
+              <select id="lh-length">
+                <option value="short">Short</option>
+                <option value="medium" selected>Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+            <div class="row">
+              <button type="button" class="btn small" id="lh-go">Write lyrics</button>
+              <span id="lh-status" class="muted small"></span>
+            </div>
+          </div>
+          <textarea id="lyrics" rows="9" placeholder="[Verse 1]&#10;…&#10;&#10;[Chorus]&#10;…"></textarea>
+
+          <label for="styles">Styles</label>
+          <input id="styles" type="text" placeholder="lofi, mellow, rainy night">
+          <div class="chips" id="style-chips"></div>
+
+          <label for="exclude">Leave out <span class="muted">(optional)</span></label>
+          <input id="exclude" type="text" placeholder="drums, electric guitar">
+
+          <div class="grid2">
+            <div>
+              <label for="bpm">Tempo <span class="muted">(BPM)</span></label>
+              <input id="bpm" type="number" min="30" max="300" placeholder="auto">
+            </div>
+            <div>
+              <label for="key">Key</label>
+              <select id="key"><option value="">Auto</option></select>
+            </div>
+          </div>
+
+          <label for="adventurous">Adventurousness <output id="adv-out">50%</output></label>
+          <input id="adventurous" type="range" min="0" max="100" value="50">
+          <div class="row between muted small"><span>Safe</span><span>Wild</span></div>
+
+          <label for="seed">Seed <span class="muted">(same seed + same settings = same song)</span></label>
+          <input id="seed" type="number" placeholder="random">
+        </div>
+
+        <div class="shared">
+          <label class="check"><input id="instrumental" type="checkbox"> Instrumental</label>
+          <div class="grid2">
+            <div>
+              <label for="duration">Length <output id="dur-out">2:00</output></label>
+              <input id="duration" type="range" min="15" max="480" step="15" value="120">
+            </div>
+            <div>
+              <label for="takes">Takes</label>
+              <select id="takes"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
+            </div>
+          </div>
+          <button class="btn primary wide" id="make-btn" type="submit">Make it</button>
+          <p id="create-error" class="error" role="alert"></p>
+        </div>
+      </form>
+
+      <div class="upload">
+        <label class="btn ghost wide" for="upload-file">⇪ Upload your own audio</label>
+        <input id="upload-file" type="file" accept="audio/*" class="visually-hidden">
+        <p class="muted small">Uploads can be remixed with ACE-Step, or split into stems.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================ LIBRARY -->
+    <section class="panel library" aria-labelledby="lib-h">
+      <div class="row between wrap">
+        <h2 id="lib-h">Library</h2>
+        <div class="row">
+          <input id="search" type="search" placeholder="Search">
+          <label class="check small"><input id="only-liked" type="checkbox"> ♥ only</label>
+        </div>
+      </div>
+      <ul id="songs" class="songs"></ul>
+      <p id="empty" class="muted empty hidden">Nothing here yet. Describe a song and press <b>Make it</b>.</p>
+    </section>
+  </main>
+
+  <!-- ============================================================ DRAWER -->
+  <aside id="drawer" class="drawer hidden" aria-label="Song details">
+    <button class="icon close" id="drawer-close" aria-label="Close">✕</button>
+    <div id="drawer-body"></div>
+  </aside>
+
+  <!-- ============================================================ DIALOGS -->
+  <dialog id="extend-dlg">
+    <form method="dialog" class="dlg">
+      <h3>Extend</h3>
+      <p class="muted small">Add more music to the end. The original stays in your library.</p>
+      <label for="ext-seconds">Add <output id="ext-out">30</output> seconds</label>
+      <input id="ext-seconds" type="range" min="10" max="240" step="5" value="30">
+      <label for="ext-lyrics">Lyrics for the new part <span class="muted">(optional)</span></label>
+      <textarea id="ext-lyrics" rows="5" placeholder="[Verse 3]&#10;…"></textarea>
+      <div class="row end"><button value="cancel" class="btn ghost">Cancel</button><button value="ok" class="btn primary">Extend</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="remix-dlg">
+    <form method="dialog" class="dlg">
+      <h3>Remix</h3>
+      <p class="muted small">Make a new version in another style.</p>
+      <label for="rmx-styles">New styles</label>
+      <input id="rmx-styles" type="text" placeholder="synthwave, dreamy">
+      <label for="rmx-strength">How different <output id="rmx-out">50%</output></label>
+      <input id="rmx-strength" type="range" min="0" max="100" value="50">
+      <div class="row between muted small"><span>Close to the original</span><span>Very different</span></div>
+      <div class="row end"><button value="cancel" class="btn ghost">Cancel</button><button value="ok" class="btn primary">Remix</button></div>
+    </form>
+  </dialog>
+
+  <!-- ============================================================ PLAYER -->
+  <footer class="player" id="player" aria-label="Player">
+    <div class="pl-controls">
+      <button class="icon" id="pl-prev" aria-label="Previous">⏮</button>
+      <button class="icon big" id="pl-play" aria-label="Play">▶</button>
+      <button class="icon" id="pl-next" aria-label="Next">⏭</button>
+    </div>
+    <div class="pl-main">
+      <div class="pl-title" id="pl-title">Nothing playing</div>
+      <canvas id="pl-wave" height="36" aria-label="Seek"></canvas>
+    </div>
+    <div class="pl-time"><span id="pl-cur">0:00</span> / <span id="pl-dur">0:00</span></div>
+    <input id="pl-vol" type="range" min="0" max="100" value="85" aria-label="Volume">
+    <audio id="audio" preload="auto"></audio>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

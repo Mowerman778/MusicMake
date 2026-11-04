@@ -1,0 +1,13 @@
+{
+  "id": "unk_2c2da4e34c49a83c",
+  "revision": 1,
+  "question": "What does the 'weirdness' slider change, as far as a listener can tell?",
+  "severity": "medium",
+  "domain": "product",
+  "status": "open",
+  "probes": [
+    "Make the same prompt at low and high settings and compare by ear"
+  ],
+  "evidence_for": [],
+  "evidence_against": []
+}

@@ -7,6 +7,27 @@ CLI command (`craft-anything-cli <tool-id-with-dashes>`) and an MCP tool. The pl
 study **suno.com**, an AI music-generation product. The goal is to learn from it and design
 **MusicMake**, our own original music-creation app.
 
+## Status (2026-11-04)
+
+MusicMake is a private, non-commercial project.
+
+| Phase | Status | Where |
+|---|---|---|
+| A. Set up | ✅ Done. Craft Anything 0.4.0 built from source; `doctor` reports healthy; brief, plan and 5 open questions recorded | `research/suno.cany` |
+| B. Hand-taken screenshots | ⏸ Waiting on you. It needs your own Suno account and browser, and automated capture isn't allowed | `research/screenshots/` (git-ignored) |
+| C. Public research | ✅ Done. 5 source notes, one evidence record each | `research/sources/` |
+| D. Synthesis | ✅ Done. 7 findings, 2 hypotheses, report written | `docs/suno-analysis.md`, `docs/musicmake-spec.md`, `research/craft-anything-report.md` |
+| E. Build | ✅ Done. MusicMake v0.1: web app, Sketch (CPU) and ACE-Step 1.5 (GPU) engines, Demucs stems, Claude lyric helper | `musicmake/`, `README.md` |
+| F. Check | ✅ Done. 17 tests pass; browser walkthrough of our own app at 3 widths plus dark mode; originality review | `tests/`, `docs/images/` |
+
+Notes on how the tools were used:
+
+- Clean-room mode refuses to open any file, even our own notes. `--deep` was used **only** to
+  open our own notes in `research/sources/`, so they could be cited as evidence. Nothing from
+  suno.com was opened by any tool.
+- The Check phase drove our own app with Playwright directly, rather than through Craft
+  Anything's `web_walkthrough_*` tools.
+
 ---
 
 ## 0. Ground rules (read first)

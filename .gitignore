@@ -1,1 +1,9 @@
+# private: screenshots of the original service stay off GitHub
 research/screenshots/
+# your songs
+data/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/

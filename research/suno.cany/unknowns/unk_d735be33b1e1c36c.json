@@ -1,0 +1,14 @@
+{
+  "id": "unk_d735be33b1e1c36c",
+  "revision": 1,
+  "question": "How long from submit to playable, and is audio streamed while it generates?",
+  "severity": "medium",
+  "domain": "product",
+  "status": "open",
+  "probes": [
+    "Time several generations by hand on the free tier",
+    "Watch whether playback starts before the end"
+  ],
+  "evidence_for": [],
+  "evidence_against": []
+}

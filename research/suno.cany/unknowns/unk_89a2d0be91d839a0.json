@@ -1,0 +1,13 @@
+{
+  "id": "unk_89a2d0be91d839a0",
+  "revision": 1,
+  "question": "Which open model gives the best vocals on a consumer GPU today?",
+  "severity": "medium",
+  "domain": "product",
+  "status": "open",
+  "probes": [
+    "Make the same lyrics with ACE-Step 1.5, YuE and DiffRhythm and compare"
+  ],
+  "evidence_for": [],
+  "evidence_against": []
+}

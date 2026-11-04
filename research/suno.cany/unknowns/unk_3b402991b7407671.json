@@ -1,0 +1,13 @@
+{
+  "id": "unk_3b402991b7407671",
+  "revision": 1,
+  "question": "How does extend pick where to continue, and can the user choose the point?",
+  "severity": "medium",
+  "domain": "product",
+  "status": "open",
+  "probes": [
+    "Use extend on a song and note the options shown"
+  ],
+  "evidence_for": [],
+  "evidence_against": []
+}
