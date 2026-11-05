@@ -23,6 +23,12 @@ play, keep, extend, remix, split into stems and download the takes it makes.
 
 ## Run it
 
+**On a laptop with a GPU, in VS Code:** follow [docs/laptop-setup.md](docs/laptop-setup.md). One
+setup script installs everything, and the VS Code task **Start everything** runs it. To check what's
+ready at any time, run `python -m musicmake doctor`.
+
+By hand:
+
 ```sh
 pip install -r requirements.txt
 python -m musicmake            # then open http://127.0.0.1:8765

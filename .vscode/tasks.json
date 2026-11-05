@@ -1,0 +1,47 @@
+{
+  // Terminal → Run Task… (or Ctrl+Shift+P → "Tasks: Run Task")
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start ACE-Step (GPU)",
+      "detail": "ACE-Step 1.5 REST server on http://127.0.0.1:8001, from the ACE-Step-1.5 folder next to this repo",
+      "type": "shell",
+      "command": "uv run acestep-api",
+      "options": { "cwd": "${workspaceFolder}/../ACE-Step-1.5" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated", "group": "servers" }
+    },
+    {
+      "label": "Start MusicMake",
+      "detail": "http://127.0.0.1:8765",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python -m musicmake",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe -m musicmake" },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": { "panel": "dedicated", "group": "servers" }
+    },
+    {
+      "label": "Start everything",
+      "dependsOn": ["Start ACE-Step (GPU)", "Start MusicMake"],
+      "problemMatcher": []
+    },
+    {
+      "label": "MusicMake doctor",
+      "detail": "Check GPU, ACE-Step, SoundCraft, ffmpeg, Demucs and Claude",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python -m musicmake doctor",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe -m musicmake doctor" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run tests",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python -m pytest -q",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe -m pytest -q" },
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}

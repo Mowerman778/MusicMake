@@ -1,4 +1,4 @@
-"""`python -m musicmake [--host 127.0.0.1] [--port 8765] [--data ./data] [--engine auto]`"""
+"""`python -m musicmake doctor`, or `python -m musicmake [--host 127.0.0.1] [--port 8765] [--data ./data] [--engine auto]`"""
 
 from __future__ import annotations
 
@@ -7,6 +7,12 @@ import os
 
 
 def main() -> None:
+    import sys
+
+    if sys.argv[1:2] == ["doctor"]:
+        from .doctor import main as doctor
+
+        raise SystemExit(doctor())
     ap = argparse.ArgumentParser(prog="musicmake", description="Private prompt-to-song music maker")
     ap.add_argument("--host", default="127.0.0.1", help="keep 127.0.0.1 so only this computer can reach it")
     ap.add_argument("--port", type=int, default=8765)

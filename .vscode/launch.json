@@ -1,0 +1,36 @@
+{
+  // Run and Debug (Ctrl+Shift+D): breakpoints work in musicmake/*.py
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "MusicMake (auto engine)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "musicmake",
+      "justMyCode": true,
+      "env": { "MUSICMAKE_ENGINE": "auto" }
+    },
+    {
+      "name": "MusicMake (Sketch only, no GPU)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "musicmake",
+      "args": ["--engine", "sketch"]
+    },
+    {
+      "name": "MusicMake doctor",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "musicmake",
+      "args": ["doctor"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-q"]
+    }
+  ]
+}
