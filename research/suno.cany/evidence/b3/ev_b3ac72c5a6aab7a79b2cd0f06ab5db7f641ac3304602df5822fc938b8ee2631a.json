@@ -1,13 +1,13 @@
 {
-  "id": "ev_aeda28e90a1566472eb7b25bb863c7d2e34875b3afc89cb6d3c701195ec78ca9",
+  "id": "ev_b3ac72c5a6aab7a79b2cd0f06ab5db7f641ac3304602df5822fc938b8ee2631a",
   "subject": {
     "kind": "unknown",
-    "sha256": "eefdf8a14dd6376035c52511c014d4e64a1587e8f6e4f6617f88630e1a1572b1",
-    "name": "04-release-timeline.md"
+    "sha256": "b3f09e83c3d527a7d858c7912f161f76ee91ab17277455f701100bc29f21055a",
+    "name": "02-terms.md"
   },
   "operation": "core_target_triage",
   "params": {
-    "path": "/home/user/MusicMake/research/sources/04-release-timeline.md"
+    "path": "/home/user/MusicMake/research/sources/02-terms.md"
   },
   "result": {
     "description": "A file we don't recognise yet",
@@ -22,13 +22,13 @@
         "why": "reopen with format=raw-binary if it is machine code"
       }
     ],
-    "plain_english": "04-release-timeline.md isn't a format we recognise yet.",
+    "plain_english": "02-terms.md isn't a format we recognise yet.",
     "recommended_toolsets": [
       "core"
     ],
-    "size": 624
+    "size": 708
   },
-  "summary": "04-release-timeline.md isn't a format we recognise yet.",
+  "summary": "02-terms.md isn't a format we recognise yet.",
   "confidence": "inferred",
   "authority": "original-files",
   "environment": {

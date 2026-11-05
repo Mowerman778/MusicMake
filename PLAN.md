@@ -13,12 +13,13 @@ MusicMake is a private, non-commercial project.
 
 | Phase | Status | Where |
 |---|---|---|
-| A. Set up | ✅ Done. Craft Anything 0.4.0 built from source; `doctor` reports healthy; brief, plan and 5 open questions recorded | `research/suno.cany` |
+| A. Set up | ✅ Done. Craft Anything 0.4.0 built from source; `doctor` reports healthy; brief and plan recorded | `research/suno.cany` |
 | B. Hand-taken screenshots | ⏸ Waiting on you. It needs your own Suno account and browser, and automated capture isn't allowed | `research/screenshots/` (git-ignored) |
-| C. Public research | ✅ Done. 5 source notes, one evidence record each | `research/sources/` |
-| D. Synthesis | ✅ Done. 7 findings, 2 hypotheses, report written | `docs/suno-analysis.md`, `docs/musicmake-spec.md`, `research/craft-anything-report.md` |
-| E. Build | ✅ Done. MusicMake v0.1: web app, Sketch (CPU) and ACE-Step 1.5 (GPU) engines, Demucs stems, Claude lyric helper | `musicmake/`, `README.md` |
-| F. Check | ✅ Done. 17 tests pass; browser walkthrough of our own app at 3 widths plus dark mode; originality review | `tests/`, `docs/images/` |
+| C. Public research | ✅ Done. 3 source notes (landing page, terms, open models), one evidence record each | `research/sources/` |
+| D. Synthesis | ✅ Done. 5 findings, 2 hypotheses, 4 open questions, report written | `docs/suno-analysis.md`, `docs/musicmake-spec.md`, `research/craft-anything-report.md` |
+| E. Build | ✅ Done. MusicMake v0.2: web app, Sketch (CPU) and ACE-Step 1.5 (GPU) engines, Demucs stems, Claude lyric helper | `musicmake/`, `README.md` |
+| F. Check | ✅ Done. 28 tests pass; browser walkthroughs of our own app (library and Studio) at 3 widths plus dark mode; originality review | `tests/`, `docs/images/` |
+| G. Studio | ✅ Done. Audio editing and mixing powered by [SoundCraft](https://github.com/storytold/soundcraft) 0.17.0 through its headless CLI | `musicmake/studio.py`, `musicmake/static/studio.js` |
 
 Notes on how the tools were used:
 
@@ -50,7 +51,7 @@ allowed to examine. It never bypasses logins, DRM or anti-cheat.
 |---|---|
 | **Clean-room mode only** (the default) | Deep mode on suno.com (`web_page_js_analyze`, `web_modules_trace`, `js_sources_restore`, `web_coverage_measure`, `web_scripts_save`, …) |
 | Screenshots a **person** takes while using Suno normally, added to the project as pictures | Automated crawling or capture of suno.com (`web_site_capture`, `web_walkthrough_record` and `web_page_watch` pointed at suno.com) |
-| Suno's public marketing pages, blog, release notes and help-centre articles, read by a person and summarised in our own words | Calling Suno's private APIs, or a stand-in backend copied from its network traffic |
+| Suno's public landing page, terms and help-centre articles, read by a person and summarised in our own words | Calling Suno's private APIs, or a stand-in backend copied from its network traffic |
 | Music-AI research papers and open-weight models | Copying Suno's name, logo, artwork, text, audio or exact layout |
 | Our own original design, inspired by the *genre* of "prompt → song" tools | Training on, or redistributing, Suno outputs |
 
@@ -69,10 +70,9 @@ craft-anything-cli settings-set deep_mode false   # stay in Clean room for the w
 1. **Understand the product surface.** What can a user do on Suno, and how is it organised?
 2. **Understand the UX patterns.** Prompt entry, the simple/custom split, lyrics, styles,
    sliders, the track list and player, remix and extend, stems, the studio/DAW.
-3. **Understand the business model.** Free and paid tiers, credits, rights.
-4. **Understand the technology at a public level only.** What music-AI capabilities are needed,
+3. **Understand the technology at a public level only.** What music-AI capabilities are needed,
    and which **open** models and papers can provide them.
-5. **Turn all of this into a spec** for MusicMake that is clearly our own.
+4. **Turn all of this into a spec** for MusicMake that is clearly our own.
 
 Not a goal: a pixel or feature clone of Suno.
 
@@ -83,14 +83,12 @@ Not a goal: a pixel or feature clone of Suno.
 From the public landing page:
 
 - **Navigation:** Products (Studio, MCP, Voices, Stem Separation, Remix, Custom Models, mobile
-  apps), Resources (Blog, Release Notes, Music Library, AI Music Tools, Help Center), Pricing.
+  apps), Resources (Music Library, AI Music Tools, Help Center).
 - **Core flow:** text prompt → full song with vocals, lyrics and production.
 - **Controls:** style, exclusions, vocal gender, "weirdness" and style-influence sliders.
 - **Features:** Studio (a browser DAW), Voices (sing with your own voice sample), Stem
   Separation, Remix (change style, lyrics or base recording), Custom Models (train on your own
   recordings), Music Library, community sharing and discovery.
-- **Tiers:** Free (about 10 songs a day, non-commercial). Pro (about 500 a month, commercial
-  rights, editor, stems). Premier (about 2,000 a month, Studio, MIDI export). Annual plans 20% off.
 
 ---
 
@@ -127,8 +125,7 @@ Screens to capture:
 8. Song editor / Studio (timeline, sections, stems)
 9. Voices and Custom Models set-up flows
 10. Explore / community feed, and creator profile
-11. Pricing and credit display
-12. Mobile app home and create (optional)
+11. Mobile app home and create (optional)
 
 Feed them into Craft Anything as **pictures**, the way Clean room supports:
 
@@ -144,8 +141,7 @@ Feed them into Craft Anything as **pictures**, the way Clean room supports:
 
 Read and summarise, in our own words, with links:
 
-- Suno blog and release notes: the feature timeline, v3 → v6
-- Help-centre articles: credits, limits, rights, supported formats
+- Help-centre articles: limits and supported formats
 - Public music-AI research and **open-weight models** we could build on:
   - text-to-music: MusicGen / AudioCraft (Meta), Stable Audio Open, ACE-Step, YuE (lyrics → song with vocals), DiffRhythm
   - stems: Demucs / HT-Demucs
@@ -161,19 +157,18 @@ Check each open-model licence with `core_finding_record` (licence, commercial us
 |---|---|---|
 | D1 | `core_investigation_show` / `core_evidence_browse` | Review everything collected |
 | D2 | `core_unknown_verify` | Close or mark the open questions |
-| D3 | `core_report_write` | **`docs/suno-analysis.md`**: feature map, UX patterns, user journeys, tiers, gaps |
+| D3 | `core_report_write` | **`docs/suno-analysis.md`**: feature map, UX patterns, user journeys, gaps |
 | D4 | `core_handoff_write` | **`docs/musicmake-spec.md`**: the original MusicMake spec |
 | D5 | `core_evidence_export` | Evidence bundle in `research/` for traceability |
 
 Report outline (`docs/suno-analysis.md`):
 
-1. Feature inventory (table: feature, tier, inputs, outputs)
+1. Feature inventory (table: feature, inputs, outputs)
 2. Core user journeys: prompt → song, lyrics → song, upload → remix, song → stems → studio
 3. UX patterns worth learning from (and ones to avoid)
 4. Generation parameters exposed to users
-5. Monetisation and credits model
-6. Community and discovery loop
-7. Gaps and opportunities for MusicMake
+5. Community and discovery loop
+6. Gaps and opportunities for MusicMake
 
 ### Phase E — Build MusicMake (original design)
 
@@ -217,10 +212,8 @@ Craft Anything's Check step normally compares the build *with the original*. Her
 - How are the takes per prompt shown and picked?
 - What is the maximum song length, and how does "extend" choose its continue point?
 - What do the "weirdness" and "style influence" sliders change, from what the user can see?
-- How are credits counted for each action (generate, extend, stems, remix)?
 - How are lyrics structure tags shown and edited?
 - What does the Studio timeline let a user change (sections, stems, MIDI)?
-- How are rights and commercial use shown to the user for each tier?
 - Which open models can match the product at each step, and under which licences?
 
 ---

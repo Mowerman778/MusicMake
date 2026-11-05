@@ -1,5 +1,5 @@
 {
-  "revision": 12,
+  "revision": 10,
   "brief": {
     "question": "What does suno.com offer, how is its product organised, and what does a private, original prompt-to-song app (MusicMake) need in order to cover the same kinds of jobs?",
     "purpose": "Learning, to design and build a private, non-commercial music maker. Not a clone.",
@@ -27,7 +27,7 @@
       "why": "Needs the owner's own account and browser; automated capture is not allowed"
     },
     {
-      "title": "Research: public pages, pricing, terms, release coverage, open models",
+      "title": "Research: public landing page, terms, open models",
       "status": "done",
       "why": "Notes in research/sources, one evidence record each"
     },
@@ -51,11 +51,10 @@
     {
       "id": "hyp_1",
       "claim": "Generating two takes per prompt lets people pick the better one, which hides the variance of generative models.",
-      "prediction": "Each create action shows two results; the pricing counts songs, not prompts.",
+      "prediction": "Each create action shows two results to choose from.",
       "status": "testing",
       "supporting": [
-        "ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555",
-        "ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc"
+        "ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77"
       ],
       "contradicting": [],
       "notes": []
@@ -66,7 +65,7 @@
       "prediction": "ACE-Step 1.5 offers text2music, cover (remix) and repaint (extend); Demucs gives 4 stems.",
       "status": "testing",
       "supporting": [
-        "ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281"
+        "ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd"
       ],
       "contradicting": [],
       "notes": []
@@ -77,7 +76,7 @@
       "id": "fnd_1",
       "statement": "The core job is one prompt in, a complete song with vocals, lyrics and production out; everything else (Studio, Voices, Remix, Stems, Custom Models) builds on a generated or uploaded track.",
       "evidence_ids": [
-        "ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555"
+        "ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77"
       ],
       "confidence": "observed"
     },
@@ -85,53 +84,36 @@
       "id": "fnd_2",
       "statement": "User controls named publicly are: style, things to leave out, vocal gender, an adventurousness-type slider and a style-influence slider, plus a simple prompt-only mode.",
       "evidence_ids": [
-        "ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555"
+        "ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77"
       ],
       "confidence": "observed"
     },
     {
       "id": "fnd_3",
-      "statement": "Pricing is credit-based with a free daily allowance and two paid tiers; downloads, commercial rights, stem types, Studio and upload length are what separate the tiers.",
+      "statement": "The Terms forbid reverse engineering, scraping, robots and building competing products, so only public, hand-read information is used and nothing is automated against suno.com.",
       "evidence_ids": [
-        "ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc"
+        "ev_b3ac72c5a6aab7a79b2cd0f06ab5db7f641ac3304602df5822fc938b8ee2631a"
       ],
       "confidence": "observed"
     },
     {
       "id": "fnd_4",
-      "statement": "The Terms forbid reverse engineering, scraping, robots and building competing products, so only public, hand-read information is used and nothing is automated against suno.com.",
+      "statement": "ACE-Step 1.5 (MIT) covers text-to-song with vocals, remix (cover) and extend (repaint) through a local REST API on under 4 GB of VRAM; Demucs (MIT) covers stem splitting.",
       "evidence_ids": [
-        "ev_0ed7b49a322a85cfef2227f15e76e5a99c4ed44579fb0a54f2e5963eb4e92836"
+        "ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd"
       ],
       "confidence": "observed"
     },
     {
       "id": "fnd_5",
-      "statement": "Recent direction (third-party coverage): personalisation (own voice, custom models, taste), a browser DAW (Studio), and a v6 model family with free and paid variants.",
-      "evidence_ids": [
-        "ev_aeda28e90a1566472eb7b25bb863c7d2e34875b3afc89cb6d3c701195ec78ca9"
-      ],
-      "confidence": "inferred"
-    },
-    {
-      "id": "fnd_6",
-      "statement": "ACE-Step 1.5 (MIT) covers text-to-song with vocals, remix (cover) and extend (repaint) through a local REST API on under 4 GB of VRAM; Demucs (MIT) covers stem splitting.",
-      "evidence_ids": [
-        "ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281"
-      ],
-      "confidence": "observed"
-    },
-    {
-      "id": "fnd_7",
       "statement": "For a private app, the jobs worth covering first are: prompt to song, lyrics to song, two takes, extend, remix, stems, download, library with favourites, and a lyric helper.",
       "evidence_ids": [
-        "ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555",
-        "ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc",
-        "ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281"
+        "ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77",
+        "ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd"
       ],
       "confidence": "derived"
     }
   ],
   "handoff": "Research and MVP are done. Next: (1) the owner captures Suno screens by hand at 3 widths, adds them to research/screenshots/ (git-ignored) and records findings per screen; (2) run ACE-Step 1.5 on a GPU and compare vocals against YuE/DiffRhythm; (3) answer the open questions. Trap: don't point web_site_capture, web_walkthrough_record or any Deep tool at suno.com.",
-  "updated": "2026-11-04T16:04:08Z"
+  "updated": "2026-11-05T18:51:01Z"
 }

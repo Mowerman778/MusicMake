@@ -121,6 +121,96 @@
     </section>
   </main>
 
+  <!-- ============================================================ STUDIO (SoundCraft) -->
+  <section id="studio" class="studio hidden" aria-label="Studio">
+    <header class="st-head">
+      <div class="st-title">
+        <span class="badge">Studio</span>
+        <h2 id="st-title">Song</h2>
+      </div>
+      <div class="st-actions">
+        <button class="btn small" id="st-undo" title="Undo (Ctrl+Z)">↶ Undo</button>
+        <button class="btn small" id="st-redo" title="Redo (Ctrl+Shift+Z)">↷ Redo</button>
+        <button class="btn small ghost" id="st-reset">Start over</button>
+        <a class="btn small" id="st-session" title="A .scraft session with all the audio, for the SoundCraft app">⬇ SoundCraft session</a>
+        <button class="btn small primary" id="st-save">Save as new song</button>
+        <button class="icon" id="st-close" aria-label="Close Studio">✕</button>
+      </div>
+    </header>
+
+    <div id="st-missing" class="st-missing hidden"></div>
+
+    <div id="st-body">
+      <div class="st-transport">
+        <button class="icon big" id="st-play" aria-label="Play">▶</button>
+        <span class="st-time"><span id="st-cur">0:00.0</span> / <span id="st-len">0:00.0</span></span>
+        <span id="st-status" class="st-status muted small"></span>
+        <span class="st-source" id="st-source-wrap">
+          Work on
+          <select id="st-source"><option value="stems">Stems</option><option value="mix">Full mix</option></select>
+        </span>
+      </div>
+
+      <div class="st-timeline">
+        <canvas id="st-wave" height="150" aria-label="Timeline: drag to select, click to move the playhead"></canvas>
+      </div>
+
+      <div class="st-selection">
+        <label>Selection
+          <input id="st-sel-start" type="number" step="0.01" min="0"> –
+          <input id="st-sel-end" type="number" step="0.01" min="0"> s
+        </label>
+        <label>Apply to
+          <select id="st-target"><option value="">All tracks</option></select>
+        </label>
+        <button class="link" id="st-sel-all">Select all</button>
+        <button class="link" id="st-sel-none">Clear</button>
+      </div>
+
+      <div class="st-tools" role="toolbar" aria-label="Edit the selection">
+        <div class="st-group"><span class="st-group-label">Edit</span>
+          <button class="btn small" data-op="cut" title="Remove the selection and close the gap">✂ Cut</button>
+          <button class="btn small" data-op="keep" title="Keep only the selection">⇥ Keep only</button>
+          <button class="btn small" data-op="silence" title="Clear the selection, leaving silence">∅ Silence</button>
+        </div>
+        <div class="st-group"><span class="st-group-label">Level</span>
+          <input id="st-gain" type="number" value="-6" step="0.5" aria-label="Gain in dB"><span class="muted small">dB</span>
+          <button class="btn small" data-op="gain">Apply gain</button>
+          <button class="btn small" data-proc="normalize">Normalize</button>
+        </div>
+        <div class="st-group"><span class="st-group-label">Process</span>
+          <button class="btn small" data-proc="reverse">⇄ Reverse</button>
+          <input id="st-semi" type="number" value="2" step="1" min="-24" max="24" aria-label="Semitones"><span class="muted small">st</span>
+          <button class="btn small" data-proc="pitch_shift">Pitch shift</button>
+          <select id="st-fx" aria-label="Effect to apply to the selection"></select>
+          <button class="btn small" id="st-fx-edit">Settings…</button>
+          <button class="btn small" id="st-fx-apply">Apply effect</button>
+        </div>
+        <div class="st-group"><span class="st-group-label">Fades</span>
+          <input id="st-fade" type="number" value="2" step="0.5" min="0.1" aria-label="Fade length in seconds"><span class="muted small">s</span>
+          <select id="st-fade-shape" aria-label="Fade shape"></select>
+          <button class="btn small" data-fade="fade_in">Fade in</button>
+          <button class="btn small" data-fade="fade_out">Fade out</button>
+        </div>
+      </div>
+      <div id="st-fx-params" class="st-fx-params hidden"></div>
+
+      <div class="st-lower">
+        <div class="st-mixer" id="st-mixer" aria-label="Mixer"></div>
+        <div class="st-side">
+        <div id="st-master"></div>
+        <aside class="st-edits">
+          <h3>Edits <span class="muted small">(applied in order, never destructive)</span></h3>
+          <ol id="st-edit-list"></ol>
+          <p id="st-no-edits" class="muted small">No edits yet. Drag on the waveform to select, then pick a tool.</p>
+          <p class="muted small st-credit">Editing, effects and mixing by <a href="https://github.com/storytold/soundcraft" target="_blank" rel="noopener">SoundCraft</a>.</p>
+        </aside>
+        </div>
+      </div>
+    </div>
+    <audio id="st-audio" preload="auto"></audio>
+  </section>
+
   <!-- ============================================================ DRAWER -->
   <aside id="drawer" class="drawer hidden" aria-label="Song details">
     <button class="icon close" id="drawer-close" aria-label="Close">✕</button>
@@ -170,5 +260,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="studio.js"></script>
 </body>
 </html>

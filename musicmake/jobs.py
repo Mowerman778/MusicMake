@@ -161,6 +161,47 @@ class Worker:
         self.q.put(job)
         return self.store.get(song_id)
 
+    # ---------------------------------------------------------------- studio (SoundCraft)
+    def studio_sources(self, song: dict, source: str) -> list[tuple[str, Path]]:
+        """(track name, file) pairs for the studio. Track names are the file names SoundCraft uses."""
+        if source == "stems" and song.get("stems"):
+            return [(n, self.store.stem_path(song["id"], n)) for n in song["stems"]]
+        return [("song", self.store.audio_path(song["id"]))]
+
+    def submit_studio_save(self, parent: dict, doc: dict, title: str) -> dict:
+        from . import studio
+
+        sources = self.studio_sources(parent, doc["source"])
+        song = self.store.create(group_id=uuid.uuid4().hex[:12], kind="edit", parent_id=parent["id"],
+                                 title=(title or f"{parent['title']} (edited)")[:80], engine="soundcraft",
+                                 request=parent.get("request") or {}, lyrics=parent.get("lyrics", ""))
+        song_id = song["id"]
+
+        def job() -> None:
+            try:
+                self.store.update(song_id, status="running", progress=0.3, message="Rendering in SoundCraft")
+                stems_dir = self.store.song_dir(song_id) / "stems"
+                secs = max(duration_of(p) for _, p in sources)
+                info = studio.render(doc, [p for _, p in sources], secs, self.store.audio_path(song_id),
+                                     stems_dir=stems_dir, key=song_id)
+                names = []
+                for f in sorted(stems_dir.glob("*.wav")):
+                    name = f.stem.split(" - ", 1)[-1]
+                    f.rename(stems_dir / f"{name}.wav")
+                    names.append(name)
+                audio, _ = read_wav(self.store.audio_path(song_id))
+                meta = {**(parent.get("meta") or {}), "engine": "soundcraft",
+                        "made_with": parent.get("engine"), "loudness": info, "studio": doc}
+                self.store.update(song_id, status="done", progress=1.0, message="Ready", meta=meta,
+                                  duration=round(duration_of(self.store.audio_path(song_id)), 2),
+                                  peaks=peaks(audio), stems=names, stems_status="done" if names else None)
+            except Exception as e:  # noqa: BLE001
+                traceback.print_exc()
+                self._fail([song_id], e)
+
+        self.q.put(job)
+        return song
+
     def import_upload(self, src: Path, title: str) -> dict:
         song = self.store.create(group_id=uuid.uuid4().hex[:12], kind="upload", title=title[:80] or "Upload",
                                  engine="upload", request={}, status="running")

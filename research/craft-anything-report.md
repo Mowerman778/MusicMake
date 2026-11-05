@@ -9,10 +9,8 @@
 ## What we looked at
 
 - 01-landing-page.md (unknown)
-- 02-pricing.md (unknown)
-- 03-terms.md (unknown)
-- 04-release-timeline.md (unknown)
-- 05-open-models.md (unknown)
+- 02-terms.md (unknown)
+- 03-open-models.md (unknown)
 - https://suno.com (public pages only)
 - /home/user/MusicMake/research/sources
 
@@ -22,45 +20,32 @@
 
 - **Confidence:** Seen it (observed)
 - **Evidence:**
-  - `ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555` — 01-landing-page.md isn't a format we recognise yet.
+  - `ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77` — 01-landing-page.md isn't a format we recognise yet.
 
 ### User controls named publicly are: style, things to leave out, vocal gender, an adventurousness-type slider and a style-influence slider, plus a simple prompt-only mode.
 
 - **Confidence:** Seen it (observed)
 - **Evidence:**
-  - `ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555` — 01-landing-page.md isn't a format we recognise yet.
-
-### Pricing is credit-based with a free daily allowance and two paid tiers; downloads, commercial rights, stem types, Studio and upload length are what separate the tiers.
-
-- **Confidence:** Seen it (observed)
-- **Evidence:**
-  - `ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc` — 02-pricing.md isn't a format we recognise yet.
+  - `ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77` — 01-landing-page.md isn't a format we recognise yet.
 
 ### The Terms forbid reverse engineering, scraping, robots and building competing products, so only public, hand-read information is used and nothing is automated against suno.com.
 
 - **Confidence:** Seen it (observed)
 - **Evidence:**
-  - `ev_0ed7b49a322a85cfef2227f15e76e5a99c4ed44579fb0a54f2e5963eb4e92836` — 03-terms.md isn't a format we recognise yet.
-
-### Recent direction (third-party coverage): personalisation (own voice, custom models, taste), a browser DAW (Studio), and a v6 model family with free and paid variants.
-
-- **Confidence:** Best guess (inferred)
-- **Evidence:**
-  - `ev_aeda28e90a1566472eb7b25bb863c7d2e34875b3afc89cb6d3c701195ec78ca9` — 04-release-timeline.md isn't a format we recognise yet.
+  - `ev_b3ac72c5a6aab7a79b2cd0f06ab5db7f641ac3304602df5822fc938b8ee2631a` — 02-terms.md isn't a format we recognise yet.
 
 ### ACE-Step 1.5 (MIT) covers text-to-song with vocals, remix (cover) and extend (repaint) through a local REST API on under 4 GB of VRAM; Demucs (MIT) covers stem splitting.
 
 - **Confidence:** Seen it (observed)
 - **Evidence:**
-  - `ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281` — 05-open-models.md isn't a format we recognise yet.
+  - `ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd` — 03-open-models.md isn't a format we recognise yet.
 
 ### For a private app, the jobs worth covering first are: prompt to song, lyrics to song, two takes, extend, remix, stems, download, library with favourites, and a lyric helper.
 
 - **Confidence:** Worked it out (derived)
 - **Evidence:**
-  - `ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555` — 01-landing-page.md isn't a format we recognise yet.
-  - `ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc` — 02-pricing.md isn't a format we recognise yet.
-  - `ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281` — 05-open-models.md isn't a format we recognise yet.
+  - `ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77` — 01-landing-page.md isn't a format we recognise yet.
+  - `ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd` — 03-open-models.md isn't a format we recognise yet.
 
 ## Open questions
 
@@ -70,11 +55,8 @@
   - would settle it: Use extend on a song and note the options shown
 - Which open model gives the best vocals on a consumer GPU today? _(severity Medium, Open)_
   - would settle it: Make the same lyrics with ACE-Step 1.5, YuE and DiffRhythm and compare
-- How many credits does each action cost (generate, extend, remix, stems)? _(severity Medium, Open)_
-  - would settle it: Read the help centre's credits article
-  - would settle it: Note the credit counter before and after each action
 - How long from submit to playable, and is audio streamed while it generates? _(severity Medium, Open)_
-  - would settle it: Time several generations by hand on the free tier
+  - would settle it: Time several generations by hand
   - would settle it: Watch whether playback starts before the end
 - (hypothesis, still testing) Generating two takes per prompt lets people pick the better one, which hides the variance of generative models.
 - (hypothesis, still testing) A local open model (ACE-Step 1.5) plus Demucs covers the core jobs for a private app.
@@ -92,9 +74,7 @@ Research and MVP are done. Next: (1) the owner captures Suno screens by hand at 
 
 ## Evidence ledger
 
-- `ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555` **core_target_triage** — 01-landing-page.md isn't a format we recognise yet. (Best guess)
-- `ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc` **core_target_triage** — 02-pricing.md isn't a format we recognise yet. (Best guess)
-- `ev_0ed7b49a322a85cfef2227f15e76e5a99c4ed44579fb0a54f2e5963eb4e92836` **core_target_triage** — 03-terms.md isn't a format we recognise yet. (Best guess)
-- `ev_aeda28e90a1566472eb7b25bb863c7d2e34875b3afc89cb6d3c701195ec78ca9` **core_target_triage** — 04-release-timeline.md isn't a format we recognise yet. (Best guess)
-- `ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281` **core_target_triage** — 05-open-models.md isn't a format we recognise yet. (Best guess)
+- `ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77` **core_target_triage** — 01-landing-page.md isn't a format we recognise yet. (Best guess)
+- `ev_b3ac72c5a6aab7a79b2cd0f06ab5db7f641ac3304602df5822fc938b8ee2631a` **core_target_triage** — 02-terms.md isn't a format we recognise yet. (Best guess)
+- `ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd` **core_target_triage** — 03-open-models.md isn't a format we recognise yet. (Best guess)
 

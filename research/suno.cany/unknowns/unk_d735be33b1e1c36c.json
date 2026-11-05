@@ -6,7 +6,7 @@
   "domain": "product",
   "status": "open",
   "probes": [
-    "Time several generations by hand on the free tier",
+    "Time several generations by hand",
     "Watch whether playback starts before the end"
   ],
   "evidence_for": [],

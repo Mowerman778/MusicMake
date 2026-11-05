@@ -1,8 +1,8 @@
 {
-  "id": "ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555",
+  "id": "ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77",
   "subject": {
     "kind": "unknown",
-    "sha256": "f58db129b34d27dd053cb831e9428c614ecd52b54d004da3c6e948580ff50a06",
+    "sha256": "7939329d73749ecfdb0431626770172cc24bafc8292c505801d4632c302a7c1b",
     "name": "01-landing-page.md"
   },
   "operation": "core_target_triage",
@@ -26,7 +26,7 @@
     "recommended_toolsets": [
       "core"
     ],
-    "size": 1238
+    "size": 1034
   },
   "summary": "01-landing-page.md isn't a format we recognise yet.",
   "confidence": "inferred",

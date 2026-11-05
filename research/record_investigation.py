@@ -33,7 +33,7 @@ def main(cli: str) -> None:
     for f in sorted(SOURCES.glob("*.md")):
         rec = call(cli, "core-target-triage", {"path": str(f)}, deep=True)
         ev[f.stem[:2]] = rec["id"]
-    landing, pricing, terms, timeline, models = (ev[k] for k in ("01", "02", "03", "04", "05"))
+    landing, terms, models = (ev[k] for k in ("01", "02", "03"))
 
     call(cli, "core-brief-write", {
         "question": "What does suno.com offer, how is its product organised, and what does a private, "
@@ -55,7 +55,7 @@ def main(cli: str) -> None:
          "why": "craft-anything-cli 0.4.0 built from source; doctor healthy"},
         {"title": "Capture: a person screenshots ~12 screens at 3 widths while using Suno normally", "status": "blocked",
          "why": "Needs the owner's own account and browser; automated capture is not allowed"},
-        {"title": "Research: public pages, pricing, terms, release coverage, open models", "status": "done",
+        {"title": "Research: public landing page, terms, open models", "status": "done",
          "why": "Notes in research/sources, one evidence record each"},
         {"title": "Synthesis: docs/suno-analysis.md and docs/musicmake-spec.md", "status": "done",
          "why": "Written from the findings below"},
@@ -67,9 +67,7 @@ def main(cli: str) -> None:
 
     for q, probes in [
         ("How long from submit to playable, and is audio streamed while it generates?",
-         ["Time several generations by hand on the free tier", "Watch whether playback starts before the end"]),
-        ("How many credits does each action cost (generate, extend, remix, stems)?",
-         ["Read the help centre's credits article", "Note the credit counter before and after each action"]),
+         ["Time several generations by hand", "Watch whether playback starts before the end"]),
         ("What does the 'weirdness' slider change, as far as a listener can tell?",
          ["Make the same prompt at low and high settings and compare by ear"]),
         ("How does extend pick where to continue, and can the user choose the point?",
@@ -81,8 +79,8 @@ def main(cli: str) -> None:
 
     call(cli, "core-hypothesis-record", {
         "claim": "Generating two takes per prompt lets people pick the better one, which hides the variance of generative models.",
-        "prediction": "Each create action shows two results; the pricing counts songs, not prompts.",
-        "evidence_for": [landing, pricing],
+        "prediction": "Each create action shows two results to choose from.",
+        "evidence_for": [landing],
     })
     call(cli, "core-hypothesis-record", {
         "claim": "A local open model (ACE-Step 1.5) plus Demucs covers the core jobs for a private app.",
@@ -95,16 +93,12 @@ def main(cli: str) -> None:
          "else (Studio, Voices, Remix, Stems, Custom Models) builds on a generated or uploaded track.", [landing], "observed"),
         ("User controls named publicly are: style, things to leave out, vocal gender, an adventurousness-type "
          "slider and a style-influence slider, plus a simple prompt-only mode.", [landing], "observed"),
-        ("Pricing is credit-based with a free daily allowance and two paid tiers; downloads, commercial rights, "
-         "stem types, Studio and upload length are what separate the tiers.", [pricing], "observed"),
         ("The Terms forbid reverse engineering, scraping, robots and building competing products, so only "
          "public, hand-read information is used and nothing is automated against suno.com.", [terms], "observed"),
-        ("Recent direction (third-party coverage): personalisation (own voice, custom models, taste), a "
-         "browser DAW (Studio), and a v6 model family with free and paid variants.", [timeline], "inferred"),
         ("ACE-Step 1.5 (MIT) covers text-to-song with vocals, remix (cover) and extend (repaint) through a "
          "local REST API on under 4 GB of VRAM; Demucs (MIT) covers stem splitting.", [models], "observed"),
         ("For a private app, the jobs worth covering first are: prompt to song, lyrics to song, two takes, "
-         "extend, remix, stems, download, library with favourites, and a lyric helper.", [landing, pricing, models], "derived"),
+         "extend, remix, stems, download, library with favourites, and a lyric helper.", [landing, models], "derived"),
     ]
     for statement, ids, conf in findings:
         call(cli, "core-finding-record", {"statement": statement, "evidence_ids": ids, "confidence": conf})

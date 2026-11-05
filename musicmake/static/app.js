@@ -177,6 +177,8 @@ function songSub(s) {
   if (s.kind === "upload") bits.push("uploaded");
   if (s.kind === "extend") bits.push("extended");
   if (s.kind === "remix") bits.push("remix");
+  if (s.kind === "edit") bits.push("edited in Studio");
+  if (s.meta?.loudness?.lufs > -100) bits.push(`${s.meta.loudness.lufs.toFixed(1)} LUFS`);
   const styles = (r.styles || []).join(", ") || r.prompt || "";
   if (styles) bits.push(styles);
   if (m.bpm) bits.push(`${m.bpm} BPM`);
@@ -225,6 +227,7 @@ function openMenu(li, s) {
   const ready = s.status === "done";
   const items = [
     ["Details & lyrics", () => openDrawer(s.id), true],
+    ["Edit in Studio", () => openStudio(s), ready],
     ["Extend…", () => extendDialog(s), ready],
     ["Remix…", () => remixDialog(s), ready],
     [s.stems && s.stems.length ? "Stems" : "Split into stems", () => stems(s), ready],
@@ -353,6 +356,7 @@ function renderDrawer() {
   const rows = [
     ["Engine", m.engine || s.engine], ["Styles", (r.styles || []).join(", ") || r.prompt],
     ["Tempo", m.bpm && `${m.bpm} BPM`], ["Key", m.key], ["Length", s.duration && fmt(s.duration)],
+    ["Loudness", m.loudness && m.loudness.lufs > -100 && `${m.loudness.lufs.toFixed(1)} LUFS · true peak ${m.loudness.true_peak_db.toFixed(1)} dBTP`],
     ["Seed", m.seed], ["Made", new Date(s.created_at * 1000).toLocaleString()],
   ].filter(([, v]) => v !== undefined && v !== null && v !== "");
   const parent = s.parent_id && state.songs.find(x => x.id === s.parent_id);
@@ -364,6 +368,7 @@ function renderDrawer() {
   else if (s.status === "done") stemsHtml = `<button class="btn small" id="dr-split">Split into stems</button>`;
   $("#drawer-body").innerHTML = `
     <h2>${esc(s.title)}</h2>
+    ${s.status === "done" ? `<p><button class="btn small primary" id="dr-studio">🎚 Edit in Studio</button></p>` : ""}
     ${parent ? `<p class="muted small">From <a href="#" id="dr-parent">${esc(parent.title)}</a></p>` : ""}
     ${s.status === "failed" ? `<p class="error">${esc(s.error)}</p>` : ""}
     <dl class="meta">${rows.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
@@ -373,6 +378,7 @@ function renderDrawer() {
     ${stemsHtml || `<p class="muted">Available when the song is ready.</p>`}`;
   $("#dr-parent")?.addEventListener("click", e => { e.preventDefault(); openDrawer(parent.id); });
   $("#dr-split")?.addEventListener("click", () => stems(s));
+  $("#dr-studio")?.addEventListener("click", () => { closeDrawer(); openStudio(s); });
   $$("[data-stem]").forEach(b => b.addEventListener("click", () => playUrl(`/api/songs/${s.id}/stems/${encodeURIComponent(b.dataset.stem)}`, `${s.title} – ${b.dataset.stem}`, s.id, null)));
 }
 

@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import json
 import os
 import re
+import shutil
 import tempfile
 from pathlib import Path
 from typing import Optional
@@ -13,8 +15,8 @@ from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import __version__
-from .audio import export_mp3, has_ffmpeg
+from . import __version__, studio
+from .audio import duration_of, export_mp3, has_ffmpeg, peaks, read_wav
 from .engines import EngineError, SongRequest, engines_status
 from .jobs import Worker
 from .lyrics import write_lyrics
@@ -94,7 +96,7 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
     @app.get("/api/health")
     def health():
         return {"version": __version__, "engines": engines_status(),
-                "ffmpeg": has_ffmpeg(), "demucs": demucs_available(), "data_dir": str(data_dir)}
+                "ffmpeg": has_ffmpeg(), "demucs": demucs_available(), "soundcraft": studio.available()[0], "data_dir": str(data_dir)}
 
     @app.get("/api/songs")
     def list_songs(liked: bool = False, q: str = ""):
@@ -197,6 +199,124 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
             return worker.import_upload(Path(tmp.name), title or Path(file.filename or "Upload").stem)
         finally:
             Path(tmp.name).unlink(missing_ok=True)
+
+    # ------------------------------------------------------------ studio (SoundCraft)
+    def studio_dir(song_id: str) -> Path:
+        d = store.song_dir(song_id) / "studio"
+        d.mkdir(exist_ok=True)
+        return d
+
+    def studio_doc(song: dict, raw: dict | None = None) -> tuple[dict, list]:
+        saved = studio_dir(song["id"]) / "edit.json"
+        if raw is None and saved.exists():
+            raw = json.loads(saved.read_text())
+        source = (raw or {}).get("source") or ("stems" if song["stems"] else "mix")
+        if source == "stems" and not song["stems"]:
+            source = "mix"
+        sources = worker.studio_sources(song, source)
+        names = [n for n, _ in sources]
+        try:
+            doc = studio.validate_doc(raw or studio.default_doc(names, source), names)
+        except studio.StudioError as e:
+            raise HTTPException(400, str(e)) from e
+        doc["source"] = source
+        return doc, sources
+
+    def studio_state(song: dict, doc: dict, render: dict | None = None) -> dict:
+        d = studio_dir(song["id"])
+        preview = d / "preview.wav"
+        info = render
+        if info is None and (d / "render.json").exists():
+            info = json.loads((d / "render.json").read_text())
+        wav = preview if preview.exists() and info else store.audio_path(song["id"])
+        audio, _ = read_wav(wav)
+        return {"doc": doc, "tracks": [t["name"] for t in doc["tracks"]], "has_stems": bool(song["stems"]),
+                "render": info, "peaks": peaks(audio, 1600), "duration": round(duration_of(wav), 3),
+                "preview": bool(info)}
+
+    @app.get("/api/studio")
+    def studio_info():
+        ok, detail = studio.available()
+        out = {"available": ok, "detail": detail, "processes": list(studio.PROCESSES),
+               "fade_shapes": list(studio.FADE_SHAPES), "plugins": []}
+        if ok:
+            try:
+                out["plugins"] = studio.plugins()
+            except studio.StudioError as e:
+                out.update(available=False, detail=str(e))
+        return out
+
+    def studio_ready() -> None:
+        ok, detail = studio.available()
+        if not ok:
+            raise HTTPException(400, detail)
+
+    @app.get("/api/songs/{song_id}/studio")
+    def studio_get(song_id: str):
+        song = song_or_404(song_id)
+        ready_or_409(song)
+        studio_ready()
+        doc, _ = studio_doc(song)
+        return studio_state(song, doc)
+
+    @app.post("/api/songs/{song_id}/studio/render")
+    def studio_render(song_id: str, body: dict):
+        song = song_or_404(song_id)
+        ready_or_409(song)
+        studio_ready()
+        doc, sources = studio_doc(song, body.get("doc") or {})
+        d = studio_dir(song_id)
+        (d / "edit.json").write_text(json.dumps(doc, indent=1))
+        secs = max(duration_of(p) for _, p in sources)
+        try:
+            info = studio.render(doc, [p for _, p in sources], secs, d / "preview.wav", key=song_id)
+        except studio.StudioError as e:
+            raise HTTPException(400, str(e)) from e
+        info.pop("path", None)
+        (d / "render.json").write_text(json.dumps(info))
+        return studio_state(song, doc, info)
+
+    @app.post("/api/songs/{song_id}/studio/reset")
+    def studio_reset(song_id: str):
+        song = song_or_404(song_id)
+        shutil.rmtree(store.song_dir(song_id) / "studio", ignore_errors=True)
+        studio_ready()
+        doc, _ = studio_doc(song)
+        return studio_state(song, doc)
+
+    @app.get("/api/songs/{song_id}/studio/preview")
+    def studio_preview(song_id: str):
+        song_or_404(song_id)
+        f = store.song_dir(song_id) / "studio" / "preview.wav"
+        if not f.exists():
+            raise HTTPException(404, "Nothing rendered yet")
+        return FileResponse(f, media_type="audio/wav")
+
+    @app.get("/api/songs/{song_id}/studio/session.zip")
+    def studio_session(song_id: str):
+        song = song_or_404(song_id)
+        ready_or_409(song)
+        studio_ready()
+        doc, sources = studio_doc(song)
+        d = studio_dir(song_id)
+        session = d / "session" / f"{_safe_name(song['title'])}.scraft"
+        secs = max(duration_of(p) for _, p in sources)
+        try:
+            studio.render(doc, [p for _, p in sources], secs, d / "session-mix.wav", session=session, key=song_id)
+        except studio.StudioError as e:
+            raise HTTPException(400, str(e)) from e
+        (d / "session-mix.wav").unlink(missing_ok=True)
+        z = studio.zip_session(session, d / "session.zip")
+        return FileResponse(z, media_type="application/zip", filename=f"{_safe_name(song['title'])} - SoundCraft.zip")
+
+    @app.post("/api/songs/{song_id}/studio/save", status_code=201)
+    def studio_save(song_id: str, body: dict):
+        song = song_or_404(song_id)
+        ready_or_409(song)
+        studio_ready()
+        doc, _ = studio_doc(song, body.get("doc") or {})
+        (studio_dir(song_id) / "edit.json").write_text(json.dumps(doc, indent=1))
+        return worker.submit_studio_save(song, doc, str(body.get("title") or ""))
 
     @app.post("/api/lyrics")
     def lyrics(body: LyricsBody):

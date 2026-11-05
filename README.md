@@ -11,6 +11,12 @@ play, keep, extend, remix, split into stems and download the takes it makes.
   (MIT, under 4 GB VRAM) for full production with real-sounding vocals.
 - **Stems.** Sketch songs come with stems; other songs are split with
   [Demucs](https://github.com/facebookresearch/demucs).
+- **Studio, powered by [SoundCraft](https://github.com/storytold/soundcraft).** Cut, trim, silence,
+  region gain, fades, reverse, pitch shift and offline effects on a waveform you can select on.
+  A mixer with volume, pan, mute, solo and 24 built-in plugins per track (EQ, compressor, gate,
+  de-esser, reverbs, delay, chorus, saturator…), a master chain with a loudness target, and
+  LUFS/true-peak metering. Everything is non-destructive and undoable. Save the result as a new
+  song, or download a `.scraft` session for the full SoundCraft app.
 - **Lyric helper.** Claude writes structured lyrics when an Anthropic key is set; offline, you get a
   template to fill in.
 - **Private.** It listens on 127.0.0.1 only, and your songs stay in a folder on your disk.
@@ -41,6 +47,17 @@ Leave the engine on **Auto** and MusicMake uses ACE-Step whenever that server is
 pip install demucs
 ```
 
+### Studio editing with SoundCraft (optional)
+
+```sh
+cargo install --git https://github.com/storytold/soundcraft soundcraft-cli   # Rust 1.90+
+```
+
+Or set `SOUNDCRAFT_CLI` to the path of a `soundcraft-cli` you already have. Then open any song's
+**⋯ → Edit in Studio**.
+
+![Studio: waveform with a selection, edit tools, mixer strips with a plate reverb, master with a loudness target](docs/images/studio-desktop.png)
+
 ### Lyric helper with Claude (optional)
 
 ```sh
@@ -57,6 +74,8 @@ Set `MUSICMAKE_LYRICS_MODEL` to use a different model.
 pip install pytest
 python -m pytest
 ```
+
+The Studio end-to-end tests run only when `soundcraft-cli` is installed.
 
 ## How this project was planned
 

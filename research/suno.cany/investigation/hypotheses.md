@@ -4,9 +4,9 @@
 
 Generating two takes per prompt lets people pick the better one, which hides the variance of generative models.
 
-Prediction: Each create action shows two results; the pricing counts songs, not prompts.
+Prediction: Each create action shows two results to choose from.
 
-Supporting: ev_7d4c5590c94411e26ce88f6b4ba252b852de408f6b9f907f3523affedd27b555, ev_9aa2e6e8d7234afb70b04fd187fe382a653dd7ffaabe657e5b912a3dfddf6cdc
+Supporting: ev_08a832f4737e9f011324add0afd1932e510c44dbc7089086d68ec3da4a9bfd77
 
 ## hyp_2 (Testing)
 
@@ -14,5 +14,5 @@ A local open model (ACE-Step 1.5) plus Demucs covers the core jobs for a private
 
 Prediction: ACE-Step 1.5 offers text2music, cover (remix) and repaint (extend); Demucs gives 4 stems.
 
-Supporting: ev_62e5efca72852bf136a23d3f821f4b2d7ea1c869fa674f88ca1c17428710a281
+Supporting: ev_139a998f33b4ee253ceaf84275996bf30ec40320784cb338883c8a18fb411fdd
 
