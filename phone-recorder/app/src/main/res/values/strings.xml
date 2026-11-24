@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MusicMake Recorder</string>
+    <string name="level">Audio level</string>
+    <string name="quality">MP3 quality</string>
+    <string name="q128">128 kbps</string>
+    <string name="q192">192 kbps</string>
+    <string name="q320">320 kbps</string>
+    <string name="saved">Saved to Music/MusicMake Recorder:</string>
+    <string name="play">Play</string>
+    <string name="share">Share</string>
+    <string name="help">Records whatever your phone is playing (not the microphone). When Android asks, choose to share the entire screen or the app you want to record; only its sound is saved. Some apps, often streaming services, block recording, and calls are never recorded. You will get a silent file from those.</string>
+</resources>

@@ -29,6 +29,7 @@ with no build step. The owner runs it on a laptop with a GPU from VS Code.
 | `tests/` | pytest |
 | `docs/` | `musicmake-spec.md` (the spec), `laptop-setup.md`, `suno-analysis.md` |
 | `research/` | Clean-room study notes and the Craft Anything project |
+| `phone-recorder/` | Separate Android app: records phone audio to MP3 (Kotlin, Gradle; APK built by GitHub Actions) |
 
 ## External engines
 
