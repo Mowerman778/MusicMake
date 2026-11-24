@@ -54,40 +54,31 @@
             android:textColor="?android:attr/colorError"
             android:visibility="gone" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/quality" />
-
-        <RadioGroup
-            android:id="@+id/quality"
+        <LinearLayout
+            android:id="@+id/pending_box"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checkedButton="@+id/q192"
-            android:orientation="horizontal">
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <RadioButton
-                android:id="@+id/q128"
-                android:layout_width="0dp"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/q128" />
+                android:text="@string/unsaved" />
 
-            <RadioButton
-                android:id="@+id/q192"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/pending_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/q192" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <RadioButton
-                android:id="@+id/q320"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/trim"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/q320" />
-        </RadioGroup>
+                android:text="@string/trim_and_save" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/last_box"

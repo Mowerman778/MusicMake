@@ -9,5 +9,24 @@
     <string name="saved">Saved to Music/MusicMake Recorder:</string>
     <string name="play">Play</string>
     <string name="share">Share</string>
-    <string name="help">Records whatever your phone is playing (not the microphone). When Android asks, choose to share the entire screen or the app you want to record; only its sound is saved. Some apps, often streaming services, block recording, and calls are never recorded. You will get a silent file from those.</string>
+    <string name="unsaved">Not saved yet:</string>
+    <string name="trim_and_save">Trim and save MP3</string>
+    <string name="trim_title">Trim recording</string>
+    <string name="trim_help">Drag the handles to cut dead spots off the start and end. Auto-trim finds them for you.</string>
+    <string name="waveform">Recording waveform. Drag the handles to set the start and end.</string>
+    <string name="minus">−0.1 s</string>
+    <string name="plus">+0.1 s</string>
+    <string name="start_earlier">Start 0.1 seconds earlier</string>
+    <string name="start_later">Start 0.1 seconds later</string>
+    <string name="end_earlier">End 0.1 seconds earlier</string>
+    <string name="end_later">End 0.1 seconds later</string>
+    <string name="auto_trim">Auto-trim silence</string>
+    <string name="keep_all">Keep everything</string>
+    <string name="play_start">Play from start</string>
+    <string name="play_end">Play the ending</string>
+    <string name="stop_preview">Stop</string>
+    <string name="save_mp3">Save MP3</string>
+    <string name="saving">Saving…</string>
+    <string name="discard">Delete recording</string>
+    <string name="help">Records whatever your phone is playing (not the microphone). After you stop, trim the dead spots off the start and end, then save it as an MP3. When Android asks, choose to share the entire screen or the app you want to record; only its sound is saved. Some apps, often streaming services, block recording, and calls are never recorded. Those come out silent, and the trim screen tells you so.</string>
 </resources>

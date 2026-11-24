@@ -7,7 +7,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -18,14 +17,15 @@ import android.media.AudioPlaybackCaptureConfiguration
 import android.media.AudioRecord
 import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
-import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.provider.MediaStore
 import java.io.BufferedOutputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -60,7 +60,6 @@ class RecordService : Service() {
         } else {
             @Suppress("DEPRECATION") intent.getParcelableExtra(EXTRA_DATA)
         }
-        val kbps = intent.getIntExtra(EXTRA_KBPS, 192)
         if (resultCode != Activity.RESULT_OK || data == null) {
             RecorderState.failed("Recording was not allowed.")
             stopSelf()
@@ -92,10 +91,10 @@ class RecordService : Service() {
         }, Handler(Looper.getMainLooper()))
 
         stopRequested = false
-        worker = Thread({ record(projection, kbps) }, "recorder").also { it.start() }
+        worker = Thread({ record(projection) }, "recorder").also { it.start() }
     }
 
-    private fun record(projection: MediaProjection, kbps: Int) {
+    private fun record(projection: MediaProjection) {
         val config = AudioPlaybackCaptureConfiguration.Builder(projection)
             .addMatchingUsage(AudioAttributes.USAGE_MEDIA)
             .addMatchingUsage(AudioAttributes.USAGE_GAME)
@@ -109,7 +108,7 @@ class RecordService : Service() {
         val minBuffer = AudioRecord.getMinBufferSize(
             SAMPLE_RATE, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT
         )
-        // About two seconds of slack so a slow encode never drops audio.
+        // About two seconds of slack so a slow write never drops audio.
         val bufferBytes = max(minBuffer, SAMPLE_RATE * CHANNELS * 2 * 2)
 
         val audio: AudioRecord = try {
@@ -128,58 +127,64 @@ class RecordService : Service() {
 
         val name = "Recording " +
             SimpleDateFormat("yyyy-MM-dd HH-mm-ss", Locale.US).format(Date()) + ".mp3"
-        val uri = createFile(name)
-        if (uri == null) {
-            audio.release()
-            RecorderState.failed("Could not create the MP3 file.")
-            shutDown(); return
-        }
-
-        var peakEver = 0
+        // Raw audio goes to app storage first; the trim screen makes the MP3.
+        val file = Pending.begin(this, name)
+        var error: String? = null
         try {
-            val stream = contentResolver.openOutputStream(uri) ?: error("cannot open file")
-            Mp3Encoder(BufferedOutputStream(stream, 64 * 1024), SAMPLE_RATE, CHANNELS, kbps).use { mp3 ->
+            BufferedOutputStream(FileOutputStream(file), 256 * 1024).use { out ->
                 val pcm = ShortArray(SAMPLE_RATE / 10 * CHANNELS) // 100 ms
+                val bytes = ByteBuffer.allocate(pcm.size * 2).order(ByteOrder.LITTLE_ENDIAN)
                 audio.startRecording()
                 RecorderState.started()
                 while (!stopRequested) {
                     val n = audio.read(pcm, 0, pcm.size)
-                    if (n < 0) error("audio read failed ($n)")
+                    if (n < 0) throw IOException("audio read failed ($n)")
                     if (n == 0) continue
                     var peak = 0
-                    for (i in 0 until n) peak = max(peak, abs(pcm[i].toInt()))
-                    peakEver = max(peakEver, peak)
+                    bytes.clear()
+                    for (i in 0 until n) {
+                        peak = max(peak, abs(pcm[i].toInt()))
+                        bytes.putShort(pcm[i])
+                    }
                     RecorderState.level(peak / 32768f)
-                    mp3.encode(pcm, n)
+                    out.write(bytes.array(), 0, n * 2)
                 }
                 audio.stop()
             }
-            publishFile(uri)
-            RecorderState.saved(name, uri, silent = peakEver == 0)
         } catch (e: Exception) {
-            contentResolver.delete(uri, null, null)
-            RecorderState.failed("Recording failed: ${e.message}")
+            error = "Recording stopped early: ${e.message}"
         } finally {
             audio.release()
-            shutDown()
         }
+        if (file.length() >= 2 * CHANNELS) {
+            RecorderState.recorded(error)
+            notifyReady()
+        } else {
+            Pending.discard(this)
+            RecorderState.failed(error ?: "Nothing was recorded.")
+        }
+        shutDown()
     }
 
-    /** A pending entry in Music/MusicMake Recorder; it stays hidden until publishFile. */
-    private fun createFile(name: String): Uri? {
-        val values = ContentValues().apply {
-            put(MediaStore.Audio.Media.DISPLAY_NAME, name)
-            put(MediaStore.Audio.Media.MIME_TYPE, "audio/mpeg")
-            put(MediaStore.Audio.Media.RELATIVE_PATH, "${Environment.DIRECTORY_MUSIC}/MusicMake Recorder")
-            put(MediaStore.Audio.Media.IS_PENDING, 1)
-        }
-        val collection = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        return contentResolver.insert(collection, values)
-    }
-
-    private fun publishFile(uri: Uri) {
-        val values = ContentValues().apply { put(MediaStore.Audio.Media.IS_PENDING, 0) }
-        contentResolver.update(uri, values, null, null)
+    /** "Recording ready": tapping it opens the trim screen. */
+    private fun notifyReady() {
+        val nm = getSystemService(NotificationManager::class.java)!!
+        nm.createNotificationChannel(
+            NotificationChannel(READY_CHANNEL_ID, "Finished recordings", NotificationManager.IMPORTANCE_DEFAULT)
+        )
+        val open = PendingIntent.getActivity(
+            this, 2, Intent(this, TrimActivity::class.java), PendingIntent.FLAG_IMMUTABLE
+        )
+        nm.notify(
+            READY_NOTIFICATION_ID,
+            Notification.Builder(this, READY_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("Recording finished")
+                .setContentText("Tap to trim it and save the MP3.")
+                .setContentIntent(open)
+                .setAutoCancel(true)
+                .build()
+        )
     }
 
     private fun shutDown() {
@@ -207,7 +212,7 @@ class RecordService : Service() {
         return Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("Recording phone audio")
-            .setContentText("Tap Stop to save the MP3.")
+            .setContentText("Tap Stop when you are done.")
             .setContentIntent(open)
             .setOngoing(true)
             .addAction(Notification.Action.Builder(null, "Stop", stop).build())
@@ -219,18 +224,18 @@ class RecordService : Service() {
         const val CHANNELS = 2
         private const val CHANNEL_ID = "recording"
         private const val NOTIFICATION_ID = 1
+        private const val READY_CHANNEL_ID = "ready"
+        const val READY_NOTIFICATION_ID = 2
         private const val ACTION_START = "start"
         private const val ACTION_STOP = "stop"
         private const val EXTRA_RESULT_CODE = "resultCode"
         private const val EXTRA_DATA = "data"
-        private const val EXTRA_KBPS = "kbps"
 
-        fun start(context: Context, resultCode: Int, data: Intent, kbps: Int) {
+        fun start(context: Context, resultCode: Int, data: Intent) {
             val intent = Intent(context, RecordService::class.java)
                 .setAction(ACTION_START)
                 .putExtra(EXTRA_RESULT_CODE, resultCode)
                 .putExtra(EXTRA_DATA, data)
-                .putExtra(EXTRA_KBPS, kbps)
             context.startForegroundService(intent)
         }
 

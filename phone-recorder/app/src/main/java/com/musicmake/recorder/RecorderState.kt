@@ -36,15 +36,18 @@ object RecorderState {
 
     fun level(value: Float) = post { level = value }
 
-    fun saved(name: String, uri: Uri, silent: Boolean) = post {
+    /** Recording finished and is waiting in [Pending] to be trimmed and saved. */
+    fun recorded(problem: String?) = post {
         recording = false
         level = 0f
+        message = problem
+    }
+
+    /** The trim screen saved an MP3. */
+    fun saved(name: String, uri: Uri) = post {
         lastName = name
         lastUri = uri
-        message = if (silent) {
-            "The recording is silent. The app you played may block recording " +
-                "(many streaming apps do), or nothing was playing."
-        } else null
+        message = null
     }
 
     fun failed(error: String) = post {

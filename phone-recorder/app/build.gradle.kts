@@ -12,8 +12,8 @@ android {
         // Recording other apps' audio (AudioPlaybackCapture) needs Android 10.
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
     }
 
     buildTypes {
@@ -37,4 +37,5 @@ android {
 dependencies {
     // Pure-Java LAME port (LGPL-2.1+), used for MP3 encoding on the phone.
     implementation("de.sciss:jump3r:1.0.5")
+    testImplementation("junit:junit:4.13.2")
 }
