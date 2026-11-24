@@ -19,12 +19,15 @@ It does not use the microphone's sound: it captures the phone's own audio output
 
 ## Get the APK
 
-Every push that touches `phone-recorder/` builds it on GitHub Actions
-(workflow "Phone recorder APK"). Open the run, download the `musicmake-recorder-apk` artifact,
-unzip it and copy `app-release.apk` to the phone. Open it there and allow installing from
-that source when Android asks.
+On your phone, open this link and install the file it downloads:
 
-The APK is signed with a debug key, which is fine for your own phone.
+https://github.com/Mowerman778/MusicMake/releases/download/recorder-latest/MusicMake-Recorder.apk
+
+Allow installing from your browser when Android asks. Every push that touches `phone-recorder/`
+rebuilds the APK on GitHub Actions and replaces that file, so the link always gets the newest build.
+
+The APK is signed with a debug key, which is fine for your own phone. Because the repository
+is public, anyone with the link can download it.
 
 ## Build it yourself
 
